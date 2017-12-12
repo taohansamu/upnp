@@ -1,0 +1,10 @@
+<modes>
+    <mode id="1" name="Mode 1">
+        <device ref="1" name="tivi" set="on"></device>
+        <device ref="2" name="light" set="off"></device>
+    </mode>
+    <mode id="2" name="Mode 2">
+        <device ref="1" name="tivi" set="off"></device>
+        <device ref="2" name="light" set="on"></device>
+    </mode>
+</modes>
