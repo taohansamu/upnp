@@ -1,5 +1,4 @@
 
-
 import org.fourthline.cling.UpnpService;
 import org.fourthline.cling.UpnpServiceImpl;
 import org.fourthline.cling.binding.xml.Descriptor;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 
-
 public class MainControlPoint implements Runnable {
     private JFrame mainFrame;
     private JLabel headerLabel;
@@ -27,9 +25,11 @@ public class MainControlPoint implements Runnable {
     private JPanel controlPanel;
     RemoteDevice tivi;
     RemoteDevice light;
-    MainControlPoint(){
+
+    MainControlPoint() {
         prepareGUI();
     }
+
     public static void main(String[] args) throws Exception {
         // Start a user thread that runs the UPnP stack
         Thread clientThread = new Thread(new MainControlPoint());
@@ -37,19 +37,20 @@ public class MainControlPoint implements Runnable {
         clientThread.start();
 
     }
-    private void prepareGUI(){
+
+    private void prepareGUI() {
         mainFrame = new JFrame("Vi du Java Swing");
-        mainFrame.setSize(400,400);
+        mainFrame.setSize(400, 400);
         mainFrame.setLayout(new GridLayout(3, 1));
         mainFrame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent windowEvent){
+            public void windowClosing(WindowEvent windowEvent) {
                 System.exit(0);
             }
         });
         headerLabel = new JLabel("", JLabel.CENTER);
-        statusLabel = new JLabel("",JLabel.CENTER);
+        statusLabel = new JLabel("", JLabel.CENTER);
 
-        statusLabel.setSize(350,100);
+        statusLabel.setSize(350, 100);
 
         controlPanel = new JPanel();
         controlPanel.setLayout(new FlowLayout());
@@ -68,13 +69,11 @@ public class MainControlPoint implements Runnable {
             UpnpService upnpService = new UpnpServiceImpl();
 
             // Add a listener for device registration events
-            upnpService.getRegistry().addListener(
-                    createRegistryListener(upnpService, devices)
-            );
+            upnpService.getRegistry().addListener(createRegistryListener(upnpService, devices));
 
             //Load setting
             Setting f = new Setting();
-//            f.setRoot(f.parseNow());
+            //            f.setRoot(f.parseNow());
 
             headerLabel.setText("Control in action: Button");
 
@@ -100,29 +99,33 @@ public class MainControlPoint implements Runnable {
             mode1Button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     statusLabel.setText("Kich hoat che do 1");
-                            if(devices.get(0).getDetails().getModelDetails().getModelName().equals("Tivi")){
-                                tivi = devices.get(0);
-                                light = devices.get(1);
-                            }else {
-                                light = devices.get(0);
-                                tivi = devices.get(1);
-                            }
-                            executeAction(upnpService, tivi.findService(serviceId), f.getDeviceSettingOfModeByName("1","tivi"));
-                            executeAction(upnpService, light.findService(serviceId), f.getDeviceSettingOfModeByName("1","light"));
+                    if (devices.get(0).getDetails().getModelDetails().getModelName().equals("Tivi")) {
+                        tivi = devices.get(0);
+                        light = devices.get(1);
+                    } else {
+                        light = devices.get(0);
+                        tivi = devices.get(1);
+                    }
+                    executeAction(upnpService, tivi.findService(serviceId),
+                            f.getDeviceSettingOfModeByName("1", "tivi"));
+                    executeAction(upnpService, light.findService(serviceId),
+                            f.getDeviceSettingOfModeByName("1", "light"));
                 }
             });
             mode2Button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     statusLabel.setText("Kich hoat che do 2");
-                    if(devices.get(0).getDetails().getModelDetails().getModelName().equals("Tivi")){
+                    if (devices.get(0).getDetails().getModelDetails().getModelName().equals("Tivi")) {
                         tivi = devices.get(0);
                         light = devices.get(1);
-                    }else {
+                    } else {
                         light = devices.get(0);
                         tivi = devices.get(1);
                     }
-                    executeAction(upnpService, tivi.findService(serviceId), f.getDeviceSettingOfModeByName("2","tivi"));
-                    executeAction(upnpService, light.findService(serviceId), f.getDeviceSettingOfModeByName("2","light"));
+                    executeAction(upnpService, tivi.findService(serviceId),
+                            f.getDeviceSettingOfModeByName("2", "tivi"));
+                    executeAction(upnpService, light.findService(serviceId),
+                            f.getDeviceSettingOfModeByName("2", "light"));
                 }
             });
 
@@ -131,11 +134,8 @@ public class MainControlPoint implements Runnable {
             controlPanel.add(refreshButton);
             mainFrame.setVisible(true);
 
-
             // Broadcast a search message for all devices
-            upnpService.getControlPoint().search(
-                    new STAllHeader()
-            );
+            upnpService.getControlPoint().search(new STAllHeader());
 
         } catch (Exception ex) {
             System.err.println("Exception occured: " + ex);
@@ -155,12 +155,9 @@ public class MainControlPoint implements Runnable {
                 if ((switchPower = device.findService(serviceId)) != null) {
 
                     System.out.println("Service discovered: " + switchPower);
-                    System.out.println("Tim duoc thiet bi co url: " + device.getIdentity().getDescriptorURL().toString());
-//                    device.getIdentity().get
+                    System.out
+                            .println("Tim duoc thiet bi co url: " + device.getIdentity().getDescriptorURL().toString());
                     devices.add(device);
-
-//                    executeAction(upnpService, switchPower);
-
                 }
 
             }
@@ -175,29 +172,25 @@ public class MainControlPoint implements Runnable {
 
         };
     }
-    void executeAction(UpnpService upnpService, Service switchPowerService,Boolean target) {
 
-        ActionInvocation setTargetInvocation =
-                new SetTargetActionInvocation(switchPowerService, target);
+    void executeAction(UpnpService upnpService, Service switchPowerService, Boolean target) {
+
+        ActionInvocation setTargetInvocation = new SetTargetActionInvocation(switchPowerService, target);
 
         // Executes asynchronous in the background
-        upnpService.getControlPoint().execute(
-                new ActionCallback(setTargetInvocation) {
+        upnpService.getControlPoint().execute(new ActionCallback(setTargetInvocation) {
 
-                    @Override
-                    public void success(ActionInvocation invocation) {
-                        assert invocation.getOutput().length == 0;
-                        System.out.println("Successfully called action!");
-                    }
+            @Override
+            public void success(ActionInvocation invocation) {
+                assert invocation.getOutput().length == 0;
+                System.out.println("Successfully called action!");
+            }
 
-                    @Override
-                    public void failure(ActionInvocation invocation,
-                                        UpnpResponse operation,
-                                        String defaultMsg) {
-                        System.err.println(defaultMsg);
-                    }
-                }
-        );
+            @Override
+            public void failure(ActionInvocation invocation, UpnpResponse operation, String defaultMsg) {
+                System.err.println(defaultMsg);
+            }
+        });
 
     }
 
@@ -206,7 +199,6 @@ public class MainControlPoint implements Runnable {
         SetTargetActionInvocation(Service service, Boolean target) {
             super(service.getAction("SetTarget"));
             try {
-
                 // Throws InvalidValueException if the value is of wrong type
                 setInput("NewTargetValue", target);
 

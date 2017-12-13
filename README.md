@@ -19,11 +19,7 @@ public void remoteDeviceAdded(Registry registry, RemoteDevice device) {
 
                     System.out.println("Service discovered: " + switchPower);
                     System.out.println("Tim duoc thiet bi co url: " + device.getIdentity().getDescriptorURL().toString());
-//                    device.getIdentity().get
                     devices.add(device);
-
-//                    executeAction(upnpService, switchPower);
-
                 }
 
             }
