@@ -113,7 +113,7 @@ public class MainControlPoint implements Runnable {
             });
             mode2Button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusLabel.setText("Kich hoat che do2");
+                    statusLabel.setText("Kich hoat che do 2");
                     if(devices.get(0).getDetails().getModelDetails().getModelName().equals("Tivi")){
                         tivi = devices.get(0);
                         light = devices.get(1);
